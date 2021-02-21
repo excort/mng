@@ -8,3 +8,10 @@ down:
 	docker-compose down
 bash:
 	docker-compose exec php /bin/bash
+
+#composer
+composer:
+	docker-compose exec php composer install
+dump-autoload:
+	docker-compose exec php composer dump-autoload
+
