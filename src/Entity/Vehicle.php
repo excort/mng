@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use MongoDB\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 use \Symfony\Component\Uid\Uuid;
-use \phpDocumentor\Reflection\Types\Collection;
 
 class Vehicle
 {
@@ -34,8 +32,7 @@ class Vehicle
         string $model,
         DateTime $productionDate,
         string $vin,
-        Manufacturer $manufacturer,
-        Registration $registration
+        Manufacturer $manufacturer
     ) {
         $this->id = Uuid::v4();
         $this->name = $name;
@@ -46,7 +43,7 @@ class Vehicle
         $this->registration = new ArrayCollection();
     }
 
-    public function getId(): \Symfony\Component\Uid\UuidV4|Uuid
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -103,6 +100,27 @@ class Vehicle
     public function setManufacturer(Manufacturer $manufacturer): Vehicle
     {
         $this->manufacturer = $manufacturer;
+        return $this;
+    }
+
+    public function getRegistration(): ArrayCollection
+    {
+        return $this->registration;
+    }
+
+    public function addRegistration(Registration $registration): Vehicle
+    {
+        if (!$this->registration->contains($registration)) {
+            $this->registration[] = $registration;
+        }
+
+        return $this;
+    }
+
+    public function removeRegistration(Registration $registration): Vehicle
+    {
+        $this->registration->removeElement($registration);
+
         return $this;
     }
 }
