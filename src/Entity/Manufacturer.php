@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraints\Uuid;
-use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Constraints as Assert;
+use \Symfony\Component\Uid\Uuid;
 
 class Manufacturer
 {
@@ -16,7 +15,17 @@ class Manufacturer
     #[Assert\Url(
         message: 'The url {{ value }} is not a valid url',
     )]
-    private Url $site;
+    private string $site;
+
+    public function __construct(
+        Uuid $id,
+        string $name,
+        string $site,
+    ) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->site = $site;
+    }
 
     public function getId(): Uuid
     {

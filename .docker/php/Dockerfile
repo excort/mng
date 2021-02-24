@@ -8,7 +8,10 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     curl \
     git \
-    wget
+    wget \
+    libcurl4-openssl-dev \
+    pkg-config \
+    libssl-dev
 
 RUN docker-php-ext-install zip soap bcmath sockets
 

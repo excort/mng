@@ -1,30 +1,26 @@
 <?php
 namespace App\Controller;
 
-use App\DTO\UserDTO;
-use App\Manager\GroupReportMaker;
-use App\Manager\UserManager;
-use JMS\Serializer\SerializerInterface;
+use App\Entity\Manufacturer;
+use App\Manager\ManufacturerManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class VehicleController
 {
-    /**
-     * VehicleController constructor.
-     */
     public function __construct(
-//        UserManager $userManager,
-//        SerializerInterface $serializer
+        private ManufacturerManager $manufacturerManager
     ) {
-//        $this->userManager = $userManager;
-//        $this->serializer = $serializer;
+//        $this->mongoProvider = $mongoProvider;
     }
 
     #[Route('/vehicle/list', name: 'vehicle_list', methods:["GET"])]
     public function getVehicleList(): Response
     {
-        dump(__METHOD__);die();
+        $manufacturer = new Manufacturer(Uuid::v4(),'NAME','SITE');
+        $this->manufacturerManager->createManufacturer($manufacturer);
+
     }
 
     #[Route('/vehicle/{id}', name: 'vehicle_by_id', methods:["GET"])]

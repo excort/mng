@@ -29,3 +29,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\MongoProvider:
+        arguments:
+            $dbName: "%env(MONGO_DB_NAME)%"
+            $dbUser: "%env(MONGO_USERNAME)%"
+            $dbPass: "%env(MONGO_PASSWORD)%"
+            $dbPort: "%env(MONGO_PORT)%"
+            $dbHost: "%env(MONGO_HOST)%"
