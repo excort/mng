@@ -5,8 +5,9 @@ namespace App\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Uid\Uuid;
+use MongoDB\BSON\Persistable;
 
-class User
+class User implements Persistable
 {
     #[Assert\Uuid]
     private Uuid $id;
@@ -32,9 +33,9 @@ class User
         $this->admin = $admin;
     }
 
-    public function getId(): Uuid
+    public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getLogin(): string
@@ -68,5 +69,25 @@ class User
     {
         $this->admin = $admin;
         return $this;
+    }
+
+    function bsonSerialize()
+    {
+        return [
+            '_id' => (string) $this->id,
+            'login' => $this->login,
+            'pass' => $this->pass,
+            'fullName' => $this->fullName,
+            'admin' => $this->admin,
+        ];
+    }
+
+    function bsonUnserialize(array $data)
+    {
+        $this->id = $data['_id'];
+        $this->login = $data['login'];
+        $this->pass = $data['pass'];
+        $this->fullName = $data['fullName'];
+        $this->admin = $data['admin'];
     }
 }

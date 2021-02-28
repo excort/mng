@@ -3,21 +3,24 @@ namespace App\Manager;
 
 use App\Entity\Manufacturer;
 use App\Service\MongoProvider;
+use MongoDB\Collection;
 
-class ManufacturerManager
+class ManufacturerProvider
 {
+    private Collection $collection;
+
     public function __construct(
         private MongoProvider $mongoProvider
-    ) {}
+    ) {
+        $this->collection = $this->mongoProvider->getManufacturerCollection();
+    }
 
     public function createManufacturer(Manufacturer $manufacturer)
     {
-        $collection = $this->mongoProvider->getManufacturerCollection();
-
         // https://docs.mongodb.com/php-library/v1.5/reference/bson/
-        $res = $collection->insertOne($manufacturer);
+        $res = $this->collection->insertOne($manufacturer);
 
-        dump($res, $test, $collection);die();
+        return $res->getInsertedId();
     }
 
     public function deleteManufacturer(Manufacturer $manufacturer)
@@ -27,5 +30,10 @@ class ManufacturerManager
 //        $collection->insertOne([ 'name' => 'Hinterland', 'brewery' => 'BrewDog' ]);
 //
 //        dump($collection);die();
+    }
+
+    public function clearManufacturer()
+    {
+        $this->mongoProvider->deleteCollection($this->collection->getCollectionName());
     }
 }

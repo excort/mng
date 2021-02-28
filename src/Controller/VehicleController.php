@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Manufacturer;
-use App\Manager\ManufacturerManager;
+use App\Manager\ManufacturerProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
@@ -10,7 +10,7 @@ use Symfony\Component\Uid\Uuid;
 class VehicleController
 {
     public function __construct(
-        private ManufacturerManager $manufacturerManager
+        private ManufacturerProvider $manufacturerProvider
     ) {
 //        $this->mongoProvider = $mongoProvider;
     }
@@ -19,7 +19,7 @@ class VehicleController
     public function getVehicleList(): Response
     {
         $manufacturer = new Manufacturer(Uuid::v4(),'NAME','SITE');
-        $this->manufacturerManager->createManufacturer($manufacturer);
+        $this->manufacturerProvider->createManufacturer($manufacturer);
 
     }
 

@@ -23,4 +23,13 @@ class MongoProvider
         return $this->client->{$this->dbName}->manufacturer;
     }
 
+    public function getUserCollection(): Collection
+    {
+        return $this->client->{$this->dbName}->user;
+    }
+
+    public function deleteCollection(string $collectionName)
+    {
+        return $this->client->{$this->dbName}->dropCollection($collectionName);
+    }
 }

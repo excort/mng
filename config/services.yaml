@@ -37,3 +37,7 @@ services:
             $dbPass: "%env(MONGO_PASSWORD)%"
             $dbPort: "%env(MONGO_PORT)%"
             $dbHost: "%env(MONGO_HOST)%"
+
+    App\Command\FixteresCommand:
+        arguments:
+            $logger: '@monolog.logger.user_log'

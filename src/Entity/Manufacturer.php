@@ -4,8 +4,9 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use \Symfony\Component\Uid\Uuid;
+use MongoDB\BSON\Persistable;
 
-class Manufacturer
+class Manufacturer implements Persistable
 {
     #[Assert\Uuid]
     private Uuid $id;
@@ -27,9 +28,9 @@ class Manufacturer
         $this->site = $site;
     }
 
-    public function getId(): Uuid
+    public function getId(): string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function setId(Uuid $id): Manufacturer
@@ -50,14 +51,30 @@ class Manufacturer
         return $this;
     }
 
-    public function getSite(): Url
+    public function getSite(): string
     {
         return $this->site;
     }
 
-    public function setSite(Url $site): Manufacturer
+    public function setSite(string $site): Manufacturer
     {
         $this->site = $site;
         return $this;
+    }
+
+    function bsonSerialize()
+    {
+        return [
+            '_id' => (string) $this->id,
+            'name' => $this->name,
+            'site' => $this->site,
+        ];
+    }
+
+    function bsonUnserialize(array $data)
+    {
+        $this->id = $data['_id'];
+        $this->name = $data['name'];
+        $this->site = $data['site'];
     }
 }
