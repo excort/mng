@@ -28,6 +28,11 @@ class MongoProvider
         return $this->client->{$this->dbName}->user;
     }
 
+    public function getRegistrationCollection(): Collection
+    {
+        return $this->client->{$this->dbName}->registration;
+    }
+
     public function deleteCollection(string $collectionName)
     {
         return $this->client->{$this->dbName}->dropCollection($collectionName);

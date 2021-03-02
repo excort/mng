@@ -58,7 +58,7 @@ services:
         volumes:
             - ./docs/swagger/:/usr/share/nginx/html/doc/
         environment:
-            SPEC_URL: ./doc/openapi.yaml
+            SPEC_URL: ./doc/swagger.yaml
     mongo:
         container_name: "mng_mongo"
         image: mongo

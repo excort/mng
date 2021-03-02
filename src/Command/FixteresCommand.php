@@ -2,6 +2,7 @@
 namespace App\Command;
 
 use App\Entity\Manufacturer;
+use App\Entity\Registration;
 use App\Entity\User;
 use App\Manager\ManufacturerProvider;
 use App\Manager\UserProvider;
@@ -77,8 +78,7 @@ class FixteresCommand extends Command
     private function getVehicleFixtures(bool $withCleaning = true): void
     {
         $this->getManufacturerFixtures($withCleaning);
-
-        $this->getManufacturerFixtures($withCleaning);
+        $this->getRegistrationFixtures($withCleaning);
     }
 
     private function getManufacturerFixtures(bool $withCleaning = true)
@@ -97,4 +97,24 @@ class FixteresCommand extends Command
             $this->manufacturerProvider->createManufacturer($manufacturer);
         }
     }
+
+    private function getRegistrationFixtures(bool $withCleaning = true)
+    {
+//        if ($withCleaning) {
+//            $this->manufacturerProvider->clearManufacturer();
+//        }
+//
+//        for ($i = 0; $i< self::MANUFACTURER_COUNT; $i++) {
+//            $manufacturer = new Manufacturer(
+//                Uuid::v4(),
+//                $this->faker->company,
+//                $this->faker->domainName,
+//            );
+//
+//            $this->manufacturerProvider->createManufacturer($manufacturer);
+//        }
+
+//        Registration $registration
+    }
+
 }
