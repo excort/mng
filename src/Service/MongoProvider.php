@@ -33,6 +33,11 @@ class MongoProvider
         return $this->client->{$this->dbName}->registration;
     }
 
+    public function getVehicleCollection(): Collection
+    {
+        return $this->client->{$this->dbName}->vehicle;
+    }
+
     public function deleteCollection(string $collectionName)
     {
         return $this->client->{$this->dbName}->dropCollection($collectionName);

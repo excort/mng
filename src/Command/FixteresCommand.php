@@ -4,8 +4,10 @@ namespace App\Command;
 use App\Entity\Manufacturer;
 use App\Entity\Registration;
 use App\Entity\User;
+use App\Entity\Vehicle;
 use App\Manager\ManufacturerProvider;
 use App\Manager\UserProvider;
+use App\Manager\VehicleProvider;
 use Faker\Factory;
 use Faker\Generator;
 use Psr\Log\LoggerInterface;
@@ -21,6 +23,8 @@ class FixteresCommand extends Command
 
     private const MANUFACTURER_COUNT = 40;
 
+    private const VEHICLE_COUNT = 10000;
+
     protected static $defaultName = 'app:fixtures-load';
 
     private Generator $faker;
@@ -28,6 +32,7 @@ class FixteresCommand extends Command
     public function __construct(
         private ManufacturerProvider $manufacturerProvider,
         private UserProvider $userProvider,
+        private VehicleProvider $vehicleProvider,
         private LoggerInterface $logger,
     ) {
         $this->faker = Factory::create();
@@ -40,6 +45,8 @@ class FixteresCommand extends Command
         $output->writeln('Start load fixtures:');
 
         $this->getUserFixtures(true);
+
+        $this->getManufacturerFixtures(true);
 
         $this->getVehicleFixtures(true);
 
@@ -75,12 +82,6 @@ class FixteresCommand extends Command
         }
     }
 
-    private function getVehicleFixtures(bool $withCleaning = true): void
-    {
-        $this->getManufacturerFixtures($withCleaning);
-        $this->getRegistrationFixtures($withCleaning);
-    }
-
     private function getManufacturerFixtures(bool $withCleaning = true)
     {
         if ($withCleaning) {
@@ -98,12 +99,31 @@ class FixteresCommand extends Command
         }
     }
 
+    private function getVehicleFixtures(bool $withCleaning = true): void
+    {
+        if ($withCleaning) {
+            $this->vehicleProvider->clearVehicle();
+        }
+
+        for ($i = 0; $i< self::VEHICLE_COUNT; $i++) {
+            $vehicle = new Vehicle(
+                $this->faker->colorName . ' ' . $this->faker->country,
+                $this->faker->city,
+                $this->faker->dateTime,
+                string $vin,
+                Manufacturer $manufacturer
+            );
+
+            $this->manufacturerProvider->createManufacturer($manufacturer);
+        }
+    }
+
     private function getRegistrationFixtures(bool $withCleaning = true)
     {
-//        if ($withCleaning) {
-//            $this->manufacturerProvider->clearManufacturer();
-//        }
-//
+        if ($withCleaning) {
+            $this->manufacturerProvider->clearManufacturer();
+        }
+
 //        for ($i = 0; $i< self::MANUFACTURER_COUNT; $i++) {
 //            $manufacturer = new Manufacturer(
 //                Uuid::v4(),
