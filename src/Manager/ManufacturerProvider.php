@@ -15,25 +15,32 @@ class ManufacturerProvider
         $this->collection = $this->mongoProvider->getManufacturerCollection();
     }
 
-    public function createManufacturer(Manufacturer $manufacturer)
+    public function createManufacturer(Manufacturer $manufacturer): mixed
     {
-        // https://docs.mongodb.com/php-library/v1.5/reference/bson/
         $res = $this->collection->insertOne($manufacturer);
 
         return $res->getInsertedId();
     }
 
-    public function deleteManufacturer(Manufacturer $manufacturer)
-    {
-//        $collection = $this->mongoProvider->getManufacturerCollection();
-//
-//        $collection->insertOne([ 'name' => 'Hinterland', 'brewery' => 'BrewDog' ]);
-//
-//        dump($collection);die();
-    }
-
-    public function clearManufacturer()
+    public function clearManufacturer(): void
     {
         $this->mongoProvider->deleteCollection($this->collection->getCollectionName());
+    }
+
+    public function findManufacturers($filter = [], array $options = []): array
+    {
+        $cursor = $this->collection->find();
+
+        return $cursor->toArray();
+    }
+
+    public function getManufacturer(array $params = [])
+    {
+        if (!$params) {
+            return null;
+        }
+
+        $cursor = $this->collection->find(['_id' => '94301']);
+        dump($cursor);die();
     }
 }

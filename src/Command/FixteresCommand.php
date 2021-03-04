@@ -6,6 +6,7 @@ use App\Entity\Registration;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Manager\ManufacturerProvider;
+use App\Manager\RegistrationProvider;
 use App\Manager\UserProvider;
 use App\Manager\VehicleProvider;
 use Faker\Factory;
@@ -33,6 +34,7 @@ class FixteresCommand extends Command
         private ManufacturerProvider $manufacturerProvider,
         private UserProvider $userProvider,
         private VehicleProvider $vehicleProvider,
+        private RegistrationProvider $registrationProvider,
         private LoggerInterface $logger,
     ) {
         $this->faker = Factory::create();
@@ -105,36 +107,59 @@ class FixteresCommand extends Command
             $this->vehicleProvider->clearVehicle();
         }
 
+        $manufacturers = $this->manufacturerProvider->findManufacturers();
+        if (!$manufacturers) {
+            return;
+        }
+
         for ($i = 0; $i< self::VEHICLE_COUNT; $i++) {
+            $manufacturer = $manufacturers[random_int(0, count($manufacturers) - 1)];
+
             $vehicle = new Vehicle(
                 $this->faker->colorName . ' ' . $this->faker->country,
                 $this->faker->city,
                 $this->faker->dateTime,
-                string $vin,
-                Manufacturer $manufacturer
+                strtoupper($this->faker->lexify('?????????????????')),
+                $manufacturer,
+                $this->manufacturerProvider
             );
 
-            $this->manufacturerProvider->createManufacturer($manufacturer);
+            $this->vehicleProvider->createVehicle($vehicle);
+
+            $this->getRegistrationFixtures($vehicle, $withCleaning);
         }
     }
 
-    private function getRegistrationFixtures(bool $withCleaning = true)
+    private function getRegistrationFixtures(Vehicle $vehicle, bool $withCleaning = true)
     {
         if ($withCleaning) {
             $this->manufacturerProvider->clearManufacturer();
         }
 
-//        for ($i = 0; $i< self::MANUFACTURER_COUNT; $i++) {
-//            $manufacturer = new Manufacturer(
-//                Uuid::v4(),
-//                $this->faker->company,
-//                $this->faker->domainName,
-//            );
-//
-//            $this->manufacturerProvider->createManufacturer($manufacturer);
-//        }
+        $count = random_int(1,10);
+        $user = null;
+        /**
+         * https://ru.stackoverflow.com/questions/424282/%D0%9A%D0%B0%D0%BA-%D0%BE%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B8%D1%82%D1%8C-%D1%87%D0%B5%D1%82%D0%BD%D0%BE%D0%B5-%D1%87%D0%B8%D1%81%D0%BB%D0%BE-%D0%B8%D0%BB%D0%B8-%D0%BD%D0%B5%D1%82-%D0%BF%D1%80%D0%B8-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8-php
+         * является ли число четным
+         */
+        if (($count & 1)) {
+            $users = $this->userProvider->findUsers();
+            /** @var User $user */
+            $user = $users[random_int(0,count($users)-1)];
+        }
 
-//        Registration $registration
+        for ($i = 0; $i< $count; $i++) {
+
+            $registration = new Registration(
+                Uuid::v4(),
+                $user,
+                $user ? $user->getFullName() : $this->faker->firstName . ' ' . $this->faker->lastName,
+                strtoupper($this->faker->lexify('??') . $this->faker->numerify('####') . $this->faker->lexify('??')),
+                $this->faker->dateTime,
+            );
+
+            $this->registrationProvider->createRegistration($registration);
+        }
     }
 
 }

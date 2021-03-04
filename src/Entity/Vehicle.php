@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use App\Manager\ManufacturerProvider;
 use Doctrine\Common\Collections\ArrayCollection;
+use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 use \Symfony\Component\Uid\Uuid;
 
-class Vehicle
+class Vehicle implements Persistable
 {
     #[Assert\Uuid]
     private Uuid $id;
@@ -32,7 +34,8 @@ class Vehicle
         string $model,
         DateTime $productionDate,
         string $vin,
-        Manufacturer $manufacturer
+        Manufacturer $manufacturer,
+        private ManufacturerProvider $manufacturerProvider,
     ) {
         $this->id = Uuid::v4();
         $this->name = $name;
@@ -122,5 +125,32 @@ class Vehicle
         $this->registration->removeElement($registration);
 
         return $this;
+    }
+
+    function bsonSerialize()
+    {
+        return [
+            '_id' => (string) $this->id,
+            'name' => $this->name,
+            'model' => $this->model,
+            'productionDate' => $this->productionDate->format('d.m.Y H:i:s'),
+            'vin' => $this->vin,
+            'manufacturer' => $this->manufacturer->getId(),
+        ];
+    }
+
+    // TODO вынести из сущностей в отдельный слой и работа через рефлексию
+    function bsonUnserialize(array $data)
+    {
+        $manufacturer = $this->manufacturerProvider->getManufacturer(['_id' => $data['manufacturer']]);;
+
+        $this->id = $data['_id'];
+        $this
+            ->setName($data['name'])
+            ->setModel($data['model'])
+            ->setProductionDate(DateTime::createFromFormat('d.m.Y H:i:s',$data['productionDate']))
+            ->setVin($data['vin'])
+            ->setManufacturer($manufacturer)
+        ;
     }
 }

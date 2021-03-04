@@ -23,17 +23,15 @@ class UserProvider
         return $res->getInsertedId();
     }
 
-    public function deleteManufacturer(Manufacturer $manufacturer)
-    {
-//        $collection = $this->mongoProvider->getManufacturerCollection();
-//
-//        $collection->insertOne([ 'name' => 'Hinterland', 'brewery' => 'BrewDog' ]);
-//
-//        dump($collection);die();
-    }
-
     public function clearUsers()
     {
         $this->mongoProvider->deleteCollection($this->collection->getCollectionName());
+    }
+
+    public function findUsers($filter = [], array $options = []): array
+    {
+        $cursor = $this->collection->find();
+
+        return $cursor->toArray();
     }
 }

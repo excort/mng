@@ -84,7 +84,7 @@ class User implements Persistable
 
     function bsonUnserialize(array $data)
     {
-        $this->id = $data['_id'];
+        $this->id = Uuid::fromString($data['_id']);
         $this->login = $data['login'];
         $this->pass = $data['pass'];
         $this->fullName = $data['fullName'];

@@ -73,8 +73,10 @@ class Manufacturer implements Persistable
 
     function bsonUnserialize(array $data)
     {
-        $this->id = $data['_id'];
-        $this->name = $data['name'];
-        $this->site = $data['site'];
+        $this
+            ->setId(Uuid::fromString($data['_id']))
+            ->setName($data['name'])
+            ->setSite($data['site'])
+        ;
     }
 }
