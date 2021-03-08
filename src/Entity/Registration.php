@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use DateTime;
+use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
 use \Symfony\Component\Uid\Uuid;
 
-class Registration
+class Registration implements Persistable
 {
     #[Assert\Uuid]
     private Uuid $id;
@@ -23,18 +24,27 @@ class Registration
 
     private DateTime $registrationDate;
 
+    private Uuid $vehicleId;
+
     public function __construct(
         Uuid $id,
         ?User $owner,
         string $ownerName,
         string $registrationNumber,
-        DateTime $registrationDate
+        DateTime $registrationDate,
     ) {
         $this->id = Uuid::v4();;
         $this->owner = $owner;
         $this->ownerName = $ownerName;
         $this->registrationNumber = $registrationNumber;
         $this->registrationDate = $registrationDate;
+    }
+
+    private function setId(Uuid $uuid): Registration
+    {
+        $this->id = $uuid;
+
+        return $this;
     }
 
     public function getId(): Uuid
@@ -84,5 +94,41 @@ class Registration
     {
         $this->registrationDate = $registrationDate;
         return $this;
+    }
+
+    public function getVehicleId(): Uuid
+    {
+        return $this->vehicleId;
+    }
+
+    public function setVehicleId(Uuid $vehicleId): Registration
+    {
+        $this->vehicleId = $vehicleId;
+
+        return $this;
+    }
+
+    function bsonSerialize()
+    {
+        return [
+            '_id' => (string) $this->id,
+            'owner' => $this->owner?->getId(), // https://www.php.net/releases/8.0/ru.php#nullsafe-operator
+            'ownerName' => $this->ownerName,
+            'registrationNumber' => $this->registrationNumber,
+            'registrationDate' => $this->registrationDate->format('d.m.Y H:i:s'),
+            'vehicleId' => (string) $this->vehicleId,
+        ];
+    }
+
+    function bsonUnserialize(array $data)
+    {
+        $this
+            ->setId(Uuid::fromString($data['_id']))
+            ->setOwner($data['owner'])
+            ->setOwnerName($data['ownerName'])
+            ->setRegistrationNumber($data['registrationNumber'])
+            ->setRegistrationDate(DateTime::createFromFormat('d.m.Y H:i:s',$data['registrationDate']))
+            ->setVehicleId(Uuid::fromString($data['vehicleId']))
+        ;
     }
 }

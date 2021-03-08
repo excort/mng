@@ -1,14 +1,12 @@
 <?php
 namespace App\Controller;
 
-use App\DTO\UserDTO;
-use App\Manager\GroupReportMaker;
-use App\Manager\UserManager;
-use JMS\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
-class UserController
+class UserController  extends AbstractController
 {
     /**
      * UserController constructor.
@@ -21,9 +19,15 @@ class UserController
 //        $this->serializer = $serializer;
     }
 
+    #[Route('/user/login', name: 'user_login', methods:["POST"])]
+    public function login(Request $request): Response
+    {
+        dump($this->getUser());die();
+    }
+
     #[Route('/user/list', name: 'user_list')]
     public function getUserList(): Response
     {
-        dump(__METHOD__);die();
+        dump($this->getUser());die();
     }
 }

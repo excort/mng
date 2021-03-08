@@ -1,13 +1,13 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\Manufacturer;
 use App\Manager\ManufacturerProvider;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Uid\Uuid;
 
-class VehicleController
+class VehicleController extends AbstractController
 {
     public function __construct(
         private ManufacturerProvider $manufacturerProvider
@@ -18,8 +18,7 @@ class VehicleController
     #[Route('/vehicle/list', name: 'vehicle_list', methods:["GET"])]
     public function getVehicleList(): Response
     {
-        $manufacturer = new Manufacturer(Uuid::v4(),'NAME','SITE');
-        $this->manufacturerProvider->createManufacturer($manufacturer);
+        dump(__METHOD__);die();
 
     }
 

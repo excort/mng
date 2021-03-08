@@ -75,7 +75,7 @@ class FixteresCommand extends Command
 
             $user = new User(
                 $login,
-                $pass,
+                md5($pass),
                 $this->faker->firstName . ' ' . $this->faker->lastName,
                 $i<self::USER_ADMIN_COUNT
             );
@@ -105,6 +105,7 @@ class FixteresCommand extends Command
     {
         if ($withCleaning) {
             $this->vehicleProvider->clearVehicle();
+            $this->registrationProvider->clearRegistration();
         }
 
         $manufacturers = $this->manufacturerProvider->findManufacturers();
@@ -126,22 +127,17 @@ class FixteresCommand extends Command
 
             $this->vehicleProvider->createVehicle($vehicle);
 
-            $this->getRegistrationFixtures($vehicle, $withCleaning);
+            $this->getRegistrationFixtures($vehicle, random_int(1,10));
         }
     }
 
-    private function getRegistrationFixtures(Vehicle $vehicle, bool $withCleaning = true)
+    private function getRegistrationFixtures(Vehicle $vehicle, int $count)
     {
-        if ($withCleaning) {
-            $this->manufacturerProvider->clearManufacturer();
-        }
-
-        $count = random_int(1,10);
-        $user = null;
         /**
          * https://ru.stackoverflow.com/questions/424282/%D0%9A%D0%B0%D0%BA-%D0%BE%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B8%D1%82%D1%8C-%D1%87%D0%B5%D1%82%D0%BD%D0%BE%D0%B5-%D1%87%D0%B8%D1%81%D0%BB%D0%BE-%D0%B8%D0%BB%D0%B8-%D0%BD%D0%B5%D1%82-%D0%BF%D1%80%D0%B8-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D0%B8-php
          * является ли число четным
          */
+        $user = null;
         if (($count & 1)) {
             $users = $this->userProvider->findUsers();
             /** @var User $user */
@@ -157,6 +153,7 @@ class FixteresCommand extends Command
                 strtoupper($this->faker->lexify('??') . $this->faker->numerify('####') . $this->faker->lexify('??')),
                 $this->faker->dateTime,
             );
+            $registration->setVehicleId($vehicle->getId());
 
             $this->registrationProvider->createRegistration($registration);
         }

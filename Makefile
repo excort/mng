@@ -8,6 +8,8 @@ down:
 	docker-compose down
 bash:
 	docker-compose exec php /bin/bash
+fixtures:
+	docker-compose exec php /bin/bash -c "php bin/console app:fixtures-load"
 
 #composer
 composer:
