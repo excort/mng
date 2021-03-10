@@ -22,12 +22,12 @@ class UserController  extends AbstractController
     #[Route('/user/login', name: 'user_login', methods:["POST"])]
     public function login(Request $request): Response
     {
-        dump($this->getUser());die();
+        dump(__METHOD__, $this->getUser());die();
     }
 
     #[Route('/user/list', name: 'user_list')]
     public function getUserList(): Response
     {
-        dump($this->getUser());die();
+        dump(__METHOD__, $this->getUser());die();
     }
 }

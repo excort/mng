@@ -6,8 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Uid\Uuid;
 use MongoDB\BSON\Persistable;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements Persistable
+class User implements Persistable, UserInterface
 {
     #[Assert\Uuid]
     private Uuid $id;
@@ -89,5 +90,45 @@ class User implements Persistable
         $this->pass = $data['pass'];
         $this->fullName = $data['fullName'];
         $this->admin = $data['admin'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return $this->admin ? 'ADMIN' : 'USER';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPassword()
+    {
+        // TODO: Implement getPassword() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        // TODO: Implement getUsername() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+        $this->setPass(null); // TODO: Implement eraseCredentials() method.
     }
 }
