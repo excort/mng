@@ -95,40 +95,46 @@ class User implements Persistable, UserInterface
     /**
      * @inheritDoc
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return $this->admin ? 'ADMIN' : 'USER';
+        $roles[] = 'ROLE_USER';
+
+        if ($this->admin) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+        return $roles;
     }
 
     /**
      * @inheritDoc
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        // TODO: Implement getPassword() method.
+        return $this->pass;
     }
 
     /**
      * @inheritDoc
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
-        // TODO: Implement getSalt() method.
+        return null;
     }
 
     /**
      * @inheritDoc
      */
-    public function getUsername()
+    public function getUsername(): string
     {
-        // TODO: Implement getUsername() method.
+        return $this->login;
     }
 
     /**
      * @inheritDoc
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
-        $this->setPass(null); // TODO: Implement eraseCredentials() method.
+        $this->setPass(null);
     }
 }

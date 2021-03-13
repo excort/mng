@@ -9,22 +9,35 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        login:
+            pattern:  ^/user/login
+            anonymous: true
+            lazy: true
+            stateless: true
         main:
-            anonymous: lazy
+            stateless: true
             provider: app_user_provider
             guard:
                 authenticators:
-                    - App\Security\LoginFormAuthenticator
+                    - App\Security\TokenAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
-    access_control:
-        - { path: ^/user/login, roles: ROLE_USER }
-        - { path: ^/, roles: ROLE_ADMIN }
-    role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+#    access_control:
+#        - { path: ^/user/login, roles: ROLE_USER }
+#        - { path: ^/, roles: ROLE_ADMIN }
+#    role_hierarchy:
+#        ROLE_ADMIN: ROLE_USER
 
 
 
 
 # https://github.com/lexik/LexikJWTAuthenticationBundle/blob/master/Resources/doc/index.md#getting-started
 # https://symfonycasts.com/screencast/symfony-rest4/jwt-guard-authenticator
+
+
+
+#13/03/21
+#   https://symfony.com/doc/current/security.html#a-authentication-firewalls
+#   https://symfony.com/doc/current/security/user_provider.html
+#   https://symfony.com/doc/current/security/guard_authentication.html
+#   https://symfony.com/doc/4.0/security/api_key_authentication.html
