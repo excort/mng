@@ -25,13 +25,9 @@ class User implements Persistable, UserInterface
 
     private bool $admin;
 
-    public function __construct(string $login, string $pass, string $fullName, bool $admin)
+    public function __construct()
     {
         $this->id = Uuid::v4();
-        $this->login = $login;
-        $this->pass = $pass;
-        $this->fullName = $fullName;
-        $this->admin = $admin;
     }
 
     public function getId(): string
@@ -44,9 +40,17 @@ class User implements Persistable, UserInterface
         return $this->login;
     }
 
+    public function setLogin(string $login): User
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
     public function setPass(string $pass): User
     {
         $this->pass = $pass;
+
         return $this;
     }
 
@@ -135,6 +139,6 @@ class User implements Persistable, UserInterface
      */
     public function eraseCredentials(): void
     {
-        $this->setPass(null);
+        $this->setPass('');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Manager\AuthProvider;
+use App\Manager\UserProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +17,11 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
+    public function __construct(
+        private EntityManagerInterface $em,
+        private UserProvider $userProvider,
+        private AuthProvider $authProvider,
+    ) {
         $this->em = $em;
     }
 
@@ -43,25 +46,27 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+        $auth = $this->authProvider->findAuth(['token' => $credentials]);
+
         if (null === $credentials) {
             // The token header was empty, authentication fails with HTTP Status
             // Code 401 "Unauthorized"
             return null;
         }
 
-        // The "username" in this case is the apiToken, see the key `property`
-        // of `your_db_provider` in `security.yaml`.
-        // If this returns a user, checkCredentials() is called next:
-        return $userProvider->loadUserByUsername($credentials);
+        return $auth->getUser();
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        dump(__METHOD__);die();
-        // Check credentials - e.g. make sure the password is valid.
-        // In case of an API token, no credential check is needed.
+        if (!$lastAuth = $this->authProvider->getLastAuthByUser($user)) {
+            return false;
+        }
 
-        // Return `true` to cause authentication success
+        if ($lastAuth->getToken() !== $credentials) {
+            return false;
+        }
+
         return true;
     }
 
@@ -73,6 +78,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
+        dump(__METHOD__);die();
         $data = [
             // you may want to customize or obfuscate the message first
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())

@@ -5,6 +5,10 @@ security:
     providers:
         app_user_provider:
             id: App\Security\UserProvider
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+#            algorithm: auto
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -14,6 +18,8 @@ security:
             anonymous: true
             lazy: true
             stateless: true
+            json_login:
+                check_path: /user/login
         main:
             stateless: true
             provider: app_user_provider

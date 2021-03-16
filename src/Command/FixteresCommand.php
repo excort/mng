@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Uid\Uuid;
 
 class FixteresCommand extends Command
@@ -36,6 +37,7 @@ class FixteresCommand extends Command
         private VehicleProvider $vehicleProvider,
         private RegistrationProvider $registrationProvider,
         private LoggerInterface $logger,
+        private UserPasswordEncoderInterface $userPasswordEncoder
     ) {
         $this->faker = Factory::create();
 
@@ -68,17 +70,18 @@ class FixteresCommand extends Command
             $pass = $this->faker->password;
 
             //** dev env for user access */
-            $this->logger->info('Create user: {login} with pass: {pass}', [
+            $this->logger->info('Create user: ', [
                 'login' => $login,
                 'pass' => $pass,
             ]);
 
-            $user = new User(
-                $login,
-                md5($pass),
-                $this->faker->firstName . ' ' . $this->faker->lastName,
-                $i<self::USER_ADMIN_COUNT
-            );
+            $user = new User();
+            $user
+                ->setLogin($login)
+                ->setPass($this->userPasswordEncoder->encodePassword($user,$pass))
+                ->setFullName($this->faker->firstName . ' ' . $this->faker->lastName)
+                ->setAdmin($i<self::USER_ADMIN_COUNT)
+            ;
 
             $this->userProvider->createUser($user);
         }

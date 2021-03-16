@@ -142,7 +142,7 @@ class Vehicle implements Persistable
     // TODO вынести из сущностей в отдельный слой и работа через рефлексию
     function bsonUnserialize(array $data)
     {
-        $manufacturer = $this->manufacturerProvider->getManufacturer(['_id' => $data['manufacturer']]);;
+        $manufacturer = $this->manufacturerProvider->getManufacturer(['_id' => $data['manufacturer']]);
 
         $this->id = $data['_id'];
         $this

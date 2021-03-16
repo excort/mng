@@ -1,7 +1,6 @@
 <?php
 namespace App\Manager;
 
-use App\Entity\Manufacturer;
 use App\Entity\User;
 use App\Service\MongoProvider;
 use MongoDB\Collection;
@@ -30,8 +29,13 @@ class UserProvider
 
     public function findUsers($filter = [], array $options = []): array
     {
-        $cursor = $this->collection->find();
+        $cursor = $this->collection->find($filter, $options);
 
         return $cursor->toArray();
+    }
+
+    public function findUser($filter = [], array $options = []): ?User
+    {
+        return $this->collection->findOne($filter, $options);
     }
 }

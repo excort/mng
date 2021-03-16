@@ -38,6 +38,11 @@ class MongoProvider
         return $this->client->{$this->dbName}->vehicle;
     }
 
+    public function getAuthCollection(): Collection
+    {
+        return $this->client->{$this->dbName}->auth;
+    }
+
     public function deleteCollection(string $collectionName)
     {
         return $this->client->{$this->dbName}->dropCollection($collectionName);
