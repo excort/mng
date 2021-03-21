@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
+use Exception;
 use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
 use \Symfony\Component\Uid\Uuid;
@@ -122,9 +123,17 @@ class Registration implements Persistable
 
     function bsonUnserialize(array $data)
     {
+        if (!$userProvider = $GLOBALS['kernel']->getContainer()->get('App\Manager\UserProvider')) {
+            throw new Exception('Error creating user token');
+        };
+
+        if (!$user = $userProvider->findUser(['_id' => $data['owner']])) {
+            throw new Exception('Error getting vihicle');
+        }
+
         $this
             ->setId(Uuid::fromString($data['_id']))
-            ->setOwner($data['owner'])
+            ->setOwner($user)
             ->setOwnerName($data['ownerName'])
             ->setRegistrationNumber($data['registrationNumber'])
             ->setRegistrationDate(DateTime::createFromFormat('d.m.Y H:i:s',$data['registrationDate']))

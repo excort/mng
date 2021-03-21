@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Manager\ManufacturerProvider;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
@@ -35,7 +36,6 @@ class Vehicle implements Persistable
         DateTime $productionDate,
         string $vin,
         Manufacturer $manufacturer,
-        private ManufacturerProvider $manufacturerProvider,
     ) {
         $this->id = Uuid::v4();
         $this->name = $name;
@@ -133,7 +133,7 @@ class Vehicle implements Persistable
             '_id' => (string) $this->id,
             'name' => $this->name,
             'model' => $this->model,
-            'productionDate' => $this->productionDate->format('d.m.Y H:i:s'),
+            'productionDate' => $this->productionDate->format('Y-m-d'),
             'vin' => $this->vin,
             'manufacturer' => $this->manufacturer->getId(),
         ];
@@ -142,13 +142,19 @@ class Vehicle implements Persistable
     // TODO вынести из сущностей в отдельный слой и работа через рефлексию
     function bsonUnserialize(array $data)
     {
-        $manufacturer = $this->manufacturerProvider->getManufacturer(['_id' => $data['manufacturer']]);
+        if (!$manufacturerProvider = $GLOBALS['kernel']->getContainer()->get('App\Manager\ManufacturerProvider')) {
+            throw new Exception('Error creating user token');
+        };
 
-        $this->id = $data['_id'];
+        if (!$manufacturer = $manufacturerProvider->getManufacturer(['_id' => $data['manufacturer']])) {
+            throw new Exception('Error getting vihicle');
+        }
+
+        $this->id = Uuid::fromString($data['_id']);
         $this
             ->setName($data['name'])
             ->setModel($data['model'])
-            ->setProductionDate(DateTime::createFromFormat('d.m.Y H:i:s',$data['productionDate']))
+            ->setProductionDate(DateTime::createFromFormat('Y-m-d',$data['productionDate']))
             ->setVin($data['vin'])
             ->setManufacturer($manufacturer)
         ;

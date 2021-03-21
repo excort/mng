@@ -34,13 +34,15 @@ class ManufacturerProvider
         return $cursor->toArray();
     }
 
-    public function getManufacturer(array $params = [])
+    public function getManufacturer(array $params = []): ?Manufacturer
     {
         if (!$params) {
             return null;
         }
 
-        $cursor = $this->collection->find(['_id' => '94301']);
-        dump($cursor);die();
+        /** @var Manufacturer|null $manufacturer */
+        $manufacturer = $this->collection->findOne($params);
+
+        return $manufacturer;
     }
 }

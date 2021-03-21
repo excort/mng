@@ -26,4 +26,11 @@ class RegistrationProvider
     {
         $this->mongoProvider->deleteCollection($this->collection->getCollectionName());
     }
+
+    public function findRegistrations($filter = [], array $options = []): array
+    {
+        $cursor = $this->collection->find($filter, $options);
+
+        return $cursor->toArray();
+    }
 }

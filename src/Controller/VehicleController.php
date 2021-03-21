@@ -2,7 +2,10 @@
 namespace App\Controller;
 
 use App\Manager\ManufacturerProvider;
+use App\Manager\VehicleManager;
+use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,21 +13,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class VehicleController extends AbstractController
 {
     public function __construct(
-        private ManufacturerProvider $manufacturerProvider
-    ) {
-//        $this->mongoProvider = $mongoProvider;
-    }
+        private VehicleManager $vehicleManager,
+        private ManufacturerProvider $manufacturerProvider,
+    ) { }
 
-    #[Route('/vehicle/list', name: 'vehicle_list', methods:["GET"])]
-    public function getVehicleList(): Response
+    #[Route('/vehicle/list/{page}', name: 'vehicle_list', methods:["GET"], defaults: ['page' => 1])]
+    public function getVehicleList(int $page, Request $request): Response
     {
-        dump(__METHOD__);die();
+        $manufacturer = $request->get('manufacturer', null);
+        if ($manufacturer) {
+            $manufacturer = $this->manufacturerProvider->getManufacturer(['_id' => $manufacturer]);
+        }
 
-    }
+        /** @var User $user */
+        $user = $this->getUser();
 
-    #[Route('/vehicle/{id}', name: 'vehicle_by_id', methods:["GET"])]
-    public function getVehicleById(int $id): Response
-    {
-        dump(__METHOD__);die();
+        $vehicles = $this->vehicleManager->getVehicleByUser($user, $manufacturer, $page);
+
+        return new JsonResponse(['data' => $vehicles]);
     }
 }

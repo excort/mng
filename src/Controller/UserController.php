@@ -34,10 +34,4 @@ class UserController  extends AbstractController
 
         return new JsonResponse(['token' => $token]);
     }
-
-    #[Route('/user/list', name: 'user_list')]
-    public function getUserList(): Response
-    {
-        dump(__METHOD__, $this->getUser());die();
-    }
 }

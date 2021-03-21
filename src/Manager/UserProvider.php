@@ -36,6 +36,13 @@ class UserProvider
 
     public function findUser($filter = [], array $options = []): ?User
     {
-        return $this->collection->findOne($filter, $options);
+        if (!$filter) {
+            return null;
+        }
+
+        /** @var User|null $user */
+        $user = $this->collection->findOne($filter, $options);
+
+        return $user;
     }
 }

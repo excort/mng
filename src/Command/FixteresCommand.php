@@ -124,8 +124,7 @@ class FixteresCommand extends Command
                 $this->faker->city,
                 $this->faker->dateTime,
                 strtoupper($this->faker->lexify('?????????????????')),
-                $manufacturer,
-                $this->manufacturerProvider
+                $manufacturer
             );
 
             $this->vehicleProvider->createVehicle($vehicle);

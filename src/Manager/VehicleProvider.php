@@ -26,4 +26,11 @@ class VehicleProvider
     {
         $this->mongoProvider->deleteCollection($this->collection->getCollectionName());
     }
+
+    public function findVehicle($filter = [], array $options = []): array
+    {
+        $cursor = $this->collection->find($filter, $options);
+
+        return $cursor->toArray();
+    }
 }
