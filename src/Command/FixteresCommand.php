@@ -9,6 +9,7 @@ use App\Manager\ManufacturerProvider;
 use App\Manager\RegistrationProvider;
 use App\Manager\UserProvider;
 use App\Manager\VehicleProvider;
+use Exception;
 use Faker\Factory;
 use Faker\Generator;
 use Psr\Log\LoggerInterface;
@@ -104,6 +105,9 @@ class FixteresCommand extends Command
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function getVehicleFixtures(bool $withCleaning = true): void
     {
         if ($withCleaning) {
@@ -133,6 +137,9 @@ class FixteresCommand extends Command
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function getRegistrationFixtures(Vehicle $vehicle, int $count)
     {
         /**

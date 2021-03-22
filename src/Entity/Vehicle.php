@@ -157,6 +157,12 @@ class Vehicle implements Persistable
             ->setProductionDate(DateTime::createFromFormat('Y-m-d',$data['productionDate']))
             ->setVin($data['vin'])
             ->setManufacturer($manufacturer)
+            ->setNullRegistration()
         ;
+    }
+
+    private function setNullRegistration()
+    {
+        $this->registration = new ArrayCollection();
     }
 }
