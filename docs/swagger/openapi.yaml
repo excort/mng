@@ -1,48 +1,18 @@
 #https://starkovden.github.io/openapi-tutorial-overview.html
-openapi: "3.0.0"
+openapi: "3.0.2"
 info:
-  description: "This is a small app for test mongo DB, openapi + redoc + php8 and symfony 5.1"
-  version: "1.0.1"
   title: "Mongo app"
-  termsOfService: "http://swagger.io/terms/"
+  description: "This is a small app for test mongo DB, openapi + redoc + php8 and symfony 5.1"
+  version: "1.0"
   contact:
+    name: "Vladymyr Moroz"
     email: "excort13@mail.ru"
+    url: "http://127.0.0.1:81"
   license:
-    name: "with out license"
+    name: "no license"
 servers:
   - url: "http://127.0.0.1:81"
-    description: For local servers
-tags:
-  - name: "User"
-    description: "Operations about user"
-  - name: "Vehicle"
-    description: "Operations about vehicle"
-parameters:
-  page:
-    description: The page number (use from second page)
-    in: path
-    name: page
-    required: no
-    type: integer
-  manufacturer:
-    description: The page number (use from second page)
-    in: query
-    name: manufacturer
-    required: no
-    type: string
-consumes:
-  - application/json
-produces:
-  - application/json
-components:
-  securitySchemes:
-    global:
-      in: header
-      name: X-AUTH-TOKEN
-      type: apiKey
-      description: API key to authorize requests
-security:
-  - global: []
+    description: for local servers
 paths:
   /user/login:
     post:
@@ -51,24 +21,47 @@ paths:
       summary: "Logs user"
       description: "Logs user into the system"
       operationId: "user_login"
-      parameters:
-        - description: "The user name for login"
-          name: "body"
-          in: "body"
-          required: true
-          schema:
-            properties:
-              username:
-                description: User's email address
-                maxLength: 128
-                type: string
-              password:
-                description: User's email address
-                maxLength: 128
-                type: string
-            required:
-              - action
-            type: object
+      requestBody:
+        description: "Body for login request"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username: # <!--- take it from log file
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+            example:
+              username: "Garry82"
+              password: "NbWx_$="
+      responses:
+        '200':
+          description: auth response
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  apikey: # <!--- take it from log file
+                    type: string
+        "401": {
+          "description": "An error due to a auth request in an invalid format for example, missing required parameters or etc.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorMessage"
+              },
+              "example": {
+                "error": "A description of the error"
+              }
+            }
+          }
+        }
+      security: []
   /vehicle/list/{page}:
     get:
       tags:
@@ -77,5 +70,45 @@ paths:
       description: "Get vehicle list with pagination"
       operationId: "vehicle_list"
       parameters:
-        - $ref: '#/parameters/page'
-        - $ref: '#/parameters/manufacturer'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/manufacturer'
+tags:
+  - name: "User"
+    description: "Operations about user"
+  - name: "Vehicle"
+    description: "Operations about vehicle"
+components:
+  schemas:
+    "ErrorMessage": {
+      "type": "object",
+      "required": [
+          "error"
+      ],
+      "properties": {
+        "error": {
+          "description": "A description of the error",
+          "type": "string"
+        }
+      }
+    }
+  parameters:
+    page:
+      description: The page number (use from second page)
+      in: path
+      name: page
+      required: no
+      type: integer
+    manufacturer:
+      description: Manufacturer id (UUID param)
+      in: query
+      name: manufacturer
+      required: no
+      type: uuid
+  securitySchemes:
+    global:
+      in: header
+      name: X-AUTH-TOKEN
+      type: apiKey
+      description: API key to authorize requests
+security:
+  - global: []

@@ -10,6 +10,8 @@ bash:
 	docker-compose exec php /bin/bash
 fixtures:
 	docker-compose exec php /bin/bash -c "php bin/console app:fixtures-load"
+info:
+	docker-compose ps
 
 #composer
 composer:
