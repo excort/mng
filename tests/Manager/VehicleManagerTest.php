@@ -17,6 +17,7 @@ use Symfony\Component\Uid\Uuid;
 // https://symfony.com/doc/current/testing.html#phpunit-configuration
 // https://github.com/sebastianbergmann/phpunit/issues/4502
 // http://docs.mockery.io/en/latest/reference/alternative_should_receive_syntax.html
+// https://stackoverflow.com/questions/21181038/phpunit-assert-a-parameter-when-pass-it-to-mock-object
 
 class VehicleManagerTest extends TestCase
 {
@@ -38,15 +39,7 @@ class VehicleManagerTest extends TestCase
         $registrationMock = $this->createMock(Registration::class);
 
         $registrationProviderMock = $this->createMock(RegistrationProvider::class);
-//        $registrationProviderMock
-//            ->expects($this->any())
-//            ->method('findRegistrations')
-//            ->willReturn([$registrationMock])
-//        ;
         $registrationProviderMock
-            ->shouldReceive('geocode')
-            ->andReturn($response)
-
             ->expects($this->any())
             ->method('findRegistrations')
             ->willReturn([$registrationMock])
