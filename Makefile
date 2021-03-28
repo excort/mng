@@ -12,6 +12,8 @@ fixtures:
 	docker-compose exec php /bin/bash -c "php bin/console app:fixtures-load"
 info:
 	docker-compose ps
+do_test:
+	docker-compose exec php /bin/bash -c "php bin/phpunit"
 
 #composer
 composer:

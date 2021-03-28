@@ -14,12 +14,9 @@ class VehicleManager
     private Collection $collection;
 
     public function __construct(
-        private MongoProvider $mongoProvider,
         private RegistrationProvider $registrationProvider,
         private VehicleProvider $vehicleProvider,
-    ) {
-        $this->collection = $this->mongoProvider->getVehicleCollection();
-    }
+    ) { }
 
     public function getVehicleByUser(
         User $user,
