@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Uid\Uuid;
 use MongoDB\BSON\Persistable;
 use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation\Exclude;
 
 class User implements Persistable, UserInterface
 {
@@ -19,6 +20,9 @@ class User implements Persistable, UserInterface
     #[SecurityAssert\UserPassword(
         message: 'Wrong value for your password',
     )]
+    /**
+     * @Exclude
+    */
     private string $pass;
 
     private string $fullName;

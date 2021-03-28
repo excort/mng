@@ -46,7 +46,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  apikey: # <!--- take it from log file
+                  token: # <!--- take it from log file
                     type: string
         "401": {
           "description": "An error due to a auth request in an invalid format for example, missing required parameters or etc.",
@@ -72,6 +72,13 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/manufacturer'
+      responses:
+        '200':
+          description: Get vehicle list for current user with pagination
+          content:
+            'application/json':
+              schema:
+                "$ref": "#/components/schemas/Vehicle"
 tags:
   - name: "User"
     description: "Operations about user"
@@ -91,6 +98,112 @@ components:
         }
       }
     }
+    "Manufacturer":
+      "type": "object"
+      "description": "Vehicle manufacturer"
+      "properties":
+        "id":
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              description: "Manufacturer uuid"
+        "name":
+          "description": "Manufacturer name"
+          "type": "string"
+        "site":
+          "description": "Manufacturer site"
+          "type": "string"
+      "required":
+        - id
+        - name
+        - site
+    "Registration":
+      "type": "object"
+      "description": "Vehicle manufacturer"
+      "properties":
+        "id":
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              description: "Manufacturer uuid"
+        "owner":
+          $ref: '#/components/schemas/Owner'
+        "owner_name":
+          "description": "Manufacturer name"
+          "type": "string"
+        "registration_number":
+          "description": "Manufacturer name"
+          "type": "string"
+        "registration_date":
+          description: "The date of production creation"
+          type: "string"
+          format: date
+          example: "2013-09-25T07:42:28+00:00"
+        "vehicle_id":
+          "description": "Manufacturer name"
+          "type": "string"
+      "required":
+        - id
+        - owner_name
+        - registration_number
+        - registration_date
+        - vehicle_id
+    "Owner":
+      "type": "object"
+      "description": "Owner"
+      "properties":
+        "id":
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              description: "Manufacturer uuid"
+        "login":
+          "description": "Owner login"
+          "type": "string"
+        "full_name":
+          "description": "Owner full name"
+          "type": "string"
+        "admin":
+          "description": "Owner role"
+          "type": "boolean"
+    "Vehicle":
+      "type": "object"
+      "properties":
+        "id":
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              description: "Vehicle uuid"
+        "name":
+          "description": "Vehicle name"
+          "type": "string"
+        "model":
+          "description": "Model name"
+          "type": "string"
+        "production_date":
+          description: "The date of production creation"
+          type: "string"
+          format: date
+          example: "2013-09-25T07:42:28+00:00"
+        "vin":
+          "description": "Vehicle vin code"
+          "type": "string"
+        "manufacturer":
+          $ref: '#/components/schemas/Manufacturer'
+        "registration":
+          $ref: '#/components/schemas/Registration'
+      "required":
+        - id
+        - name
+        - model
+        - production_date
+        - vin
+        - manufacturer
+        - registration
   parameters:
     page:
       description: The page number (use from second page)
