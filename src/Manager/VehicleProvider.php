@@ -33,11 +33,4 @@ class VehicleProvider
 
         return $cursor->toArray();
     }
-
-    public function findVehicle22($filter = [], array $options = []): array
-    {
-        $cursor = $this->collection->find($filter, $options);
-
-        return $cursor->toArray();
-    }
 }

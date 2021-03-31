@@ -21,11 +21,6 @@ use Symfony\Component\Uid\Uuid;
 
 class VehicleManagerTest extends TestCase
 {
-    private RegistrationProvider $registrationProviderMock;
-    private VehicleProvider $vehicleProviderMock;
-
-    private VehicleManager $vehicleManager;
-
     /**
      * анотации работают только с версии 10
      * @dataProvider getVehicleByUserProvider
@@ -37,6 +32,11 @@ class VehicleManagerTest extends TestCase
         string $vehicleId
     ):void {
         $registrationMock = $this->createMock(Registration::class);
+        $registrationMock
+            ->expects($this->any())
+            ->method('getVehicleId')
+            ->willReturn(Uuid::fromString($arRegistration[0]['vehicleId']))
+        ;
 
         $registrationProviderMock = $this->createMock(RegistrationProvider::class);
         $registrationProviderMock
@@ -51,12 +51,10 @@ class VehicleManagerTest extends TestCase
             ->method('getId')
             ->willReturn(Uuid::fromString($vehicleId))
         ;
-//        $vehicleMock
-//            ->expects($this->any())
-//            ->method('addRegistration')
-//            ->with($registrationProviderMock)
-//            ->willReturn($vehicleMock)
-//        ;
+        $vehicleMock
+            ->expects($this->any())
+            ->method('addRegistration')
+        ;
 
         $vehicleProviderMock = $this->createMock(VehicleProvider::class);
         $vehicleProviderMock
@@ -79,10 +77,7 @@ class VehicleManagerTest extends TestCase
 
         $result = $vehicleManager->getVehicleByUser($userMock, null, 1, 5);
 
-        dump($result);die();
-        $ttt = 42;
-        // assert that your calculator added the numbers correctly!
-        $this->assertEquals(42, $ttt);
+        $this->assertEquals($result[0]->getId(), $vehicleId);
     }
 
     public function getVehicleByUserProvider(): array
@@ -103,36 +98,36 @@ class VehicleManagerTest extends TestCase
                 ],
                 "2b9cabf9-5126-4fa3-897b-ec636198434d",
             ],
-//            [
-//                true,
-//                null,
-//                [
-//                    [
-//                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
-//                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434a",
-//                    ],
-//                    [
-//                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
-//                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434b",
-//                    ]
-//                ],
-//                "2b9cabf9-5126-4fa3-897b-ec636198434d",
-//            ],
-//            [
-//                true,
-//                "2b9cabf9-5126-4fa3-897b-ec636198434c",
-//                [
-//                    [
-//                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
-//                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434a",
-//                    ],
-//                    [
-//                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
-//                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434b",
-//                    ]
-//                ],
-//                "2b9cabf9-5126-4fa3-897b-ec636198434d",
-//            ],
+            [
+                true,
+                null,
+                [
+                    [
+                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
+                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434a",
+                    ],
+                    [
+                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
+                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434b",
+                    ]
+                ],
+                "2b9cabf9-5126-4fa3-897b-ec636198434d",
+            ],
+            [
+                true,
+                "2b9cabf9-5126-4fa3-897b-ec636198434c",
+                [
+                    [
+                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
+                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434a",
+                    ],
+                    [
+                        "_id" => "2308751a-6635-4f11-afc6-5a16ccf775e7",
+                        "vehicleId" => "2b9cabf9-5126-4fa3-897b-ec636198434b",
+                    ]
+                ],
+                "2b9cabf9-5126-4fa3-897b-ec636198434d",
+            ],
         ];
     }
 }

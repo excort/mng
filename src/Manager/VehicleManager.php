@@ -2,6 +2,7 @@
 namespace App\Manager;
 
 use App\Entity\Manufacturer;
+use App\Entity\Registration;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Service\MongoProvider;
@@ -62,17 +63,13 @@ class VehicleManager
     private function getVehicleIdByRegistrationForUser(User $user): array
     {
         $arRegistration = $this->registrationProvider->findRegistrations(
-            ['owner' => $user->getId()],
-            [
-                'projection' => [
-                    'vehicleId' => 1,
-                ],
-            ]
+            ['owner' => $user->getId()]
         );
 
         $result = [];
         foreach ($arRegistration as $registration) {
-            $result[] = $registration["vehicleId"];
+            /** @var Registration $registration */
+            $result[] = $registration->getVehicleId();
         }
 
         return $result;
