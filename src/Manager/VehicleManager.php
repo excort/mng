@@ -69,7 +69,7 @@ class VehicleManager
         $result = [];
         foreach ($arRegistration as $registration) {
             /** @var Registration $registration */
-            $result[] = $registration->getVehicleId();
+            $result[] = (string) $registration->getVehicleId();
         }
 
         return $result;
