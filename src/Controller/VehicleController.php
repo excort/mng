@@ -36,6 +36,10 @@ class VehicleController extends AbstractController
 
         $vehicles = $this->vehicleManager->getVehicleByUser($user, $manufacturer, $page);
 
+        /**
+         * можно добавить кол-во записей всего имеется и сколько страниц доступно с учетом расположение
+         * элементов на странице.
+         */
         $data = $this->serializer->serialize($vehicles, 'json');
         $response = new JsonResponse();
 
