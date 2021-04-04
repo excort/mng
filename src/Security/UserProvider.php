@@ -15,7 +15,6 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     public function __construct(
         private MongoUserProvider $userProvider,
     ) {
-
     }
 
     /**
@@ -59,7 +58,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
         // Return a User object after making sure its data is "fresh".
         // Or throw a UsernameNotFoundException if the user no longer exists.
-        throw new \Exception('TODO: fill in refreshUser() inside '.__FILE__);
+        throw new \Exception('TODO: fill in refreshUser() inside ' . __FILE__);
     }
 
     /**

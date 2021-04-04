@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use MongoDB\Client;
@@ -15,7 +16,7 @@ class MongoProvider
         private string $dbPort,
         private string $dbHost,
     ) {
-        $this->client = new Client('mongodb://' . $dbUser . ':' . $dbPass . '@'. $dbHost . ':' . $dbPort);
+        $this->client = new Client('mongodb://' . $dbUser . ':' . $dbPass . '@' . $dbHost . ':' . $dbPort);
     }
 
     public function getManufacturerCollection(): Collection

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command;
 
 use App\Entity\Manufacturer;
@@ -66,7 +67,7 @@ class FixteresCommand extends Command
             $this->userProvider->clearUsers();
         }
 
-        for ($i = 0; $i< self::USER_COUNT; $i++) {
+        for ($i = 0; $i < self::USER_COUNT; $i++) {
             $login = $this->faker->unique()->userName;
             $pass = $this->faker->password;
 
@@ -79,9 +80,9 @@ class FixteresCommand extends Command
             $user = new User();
             $user
                 ->setLogin($login)
-                ->setPass($this->userPasswordEncoder->encodePassword($user,$pass))
+                ->setPass($this->userPasswordEncoder->encodePassword($user, $pass))
                 ->setFullName($this->faker->firstName . ' ' . $this->faker->lastName)
-                ->setAdmin($i<self::USER_ADMIN_COUNT)
+                ->setAdmin($i < self::USER_ADMIN_COUNT)
             ;
 
             $this->userProvider->createUser($user);
@@ -94,7 +95,7 @@ class FixteresCommand extends Command
             $this->manufacturerProvider->clearManufacturer();
         }
 
-        for ($i = 0; $i< self::MANUFACTURER_COUNT; $i++) {
+        for ($i = 0; $i < self::MANUFACTURER_COUNT; $i++) {
             $manufacturer = new Manufacturer(
                 Uuid::v4(),
                 $this->faker->company,
@@ -120,7 +121,7 @@ class FixteresCommand extends Command
             return;
         }
 
-        for ($i = 0; $i< self::VEHICLE_COUNT; $i++) {
+        for ($i = 0; $i < self::VEHICLE_COUNT; $i++) {
             $manufacturer = $manufacturers[random_int(0, count($manufacturers) - 1)];
 
             $vehicle = new Vehicle(
@@ -153,7 +154,7 @@ class FixteresCommand extends Command
             $user = $users[random_int(0,count($users)-1)];
         }
 
-        for ($i = 0; $i< $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
 
             $registration = new Registration(
                 Uuid::v4(),

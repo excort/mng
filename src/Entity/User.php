@@ -80,7 +80,7 @@ class User implements Persistable, UserInterface
         return $this;
     }
 
-    function bsonSerialize()
+    public function bsonSerialize()
     {
         return [
             '_id' => (string) $this->id,
@@ -91,7 +91,7 @@ class User implements Persistable, UserInterface
         ];
     }
 
-    function bsonUnserialize(array $data)
+    public function bsonUnserialize(array $data)
     {
         $this->id = Uuid::fromString($data['_id']);
         $this->login = $data['login'];

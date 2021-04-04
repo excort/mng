@@ -6,14 +6,14 @@ use DateTime;
 use Exception;
 use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
-use \Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class Registration implements Persistable
 {
     #[Assert\Uuid]
     private Uuid $id;
 
-    private User|null $owner;
+    private User | null $owner;
 
     private string $ownerName;
 
@@ -34,7 +34,8 @@ class Registration implements Persistable
         string $registrationNumber,
         DateTime $registrationDate,
     ) {
-        $this->id = Uuid::v4();;
+        $this->id = Uuid::v4();
+        ;
         $this->owner = $owner;
         $this->ownerName = $ownerName;
         $this->registrationNumber = $registrationNumber;
@@ -136,7 +137,7 @@ class Registration implements Persistable
             ->setOwner($user)
             ->setOwnerName($data['ownerName'])
             ->setRegistrationNumber($data['registrationNumber'])
-            ->setRegistrationDate(DateTime::createFromFormat('d.m.Y H:i:s',$data['registrationDate']))
+            ->setRegistrationDate(DateTime::createFromFormat('d.m.Y H:i:s', $data['registrationDate']))
             ->setVehicleId(Uuid::fromString($data['vehicleId']))
         ;
     }

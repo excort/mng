@@ -72,7 +72,7 @@ class Auth implements Persistable
         }
 
         $this->id = Uuid::fromString($data['_id']);
-        $this->createdAt = DateTime::createFromFormat('d.m.Y H:i:s',$data['createdAt']);
+        $this->createdAt = DateTime::createFromFormat('d.m.Y H:i:s', $data['createdAt']);
         $this->user = $user;
         $this->token = $data['token'];
     }

@@ -1,15 +1,17 @@
 <?php
+
 namespace App\Manager;
 
 use App\Entity\Vehicle;
 use App\Service\MongoProvider;
+use JetBrains\PhpStorm\Pure;
 use MongoDB\Collection;
 
 class VehicleProvider
 {
     private Collection $collection;
 
-    public function __construct(
+    #[Pure] public function __construct(
         private MongoProvider $mongoProvider
     ) {
         $this->collection = $this->mongoProvider->getVehicleCollection();

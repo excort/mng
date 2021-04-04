@@ -8,7 +8,7 @@ use Exception;
 use MongoDB\BSON\Persistable;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
-use \Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 class Vehicle implements Persistable
 {
@@ -154,7 +154,7 @@ class Vehicle implements Persistable
         $this
             ->setName($data['name'])
             ->setModel($data['model'])
-            ->setProductionDate(DateTime::createFromFormat('Y-m-d',$data['productionDate']))
+            ->setProductionDate(DateTime::createFromFormat('Y-m-d', $data['productionDate']))
             ->setVin($data['vin'])
             ->setManufacturer($manufacturer)
             ->setNullRegistration()

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use \Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\Uuid;
 use MongoDB\BSON\Persistable;
 
 class Manufacturer implements Persistable

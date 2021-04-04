@@ -1,23 +1,19 @@
 <?php
+
 namespace App\Manager;
 
 use App\Entity\Manufacturer;
 use App\Entity\Registration;
 use App\Entity\User;
 use App\Entity\Vehicle;
-use App\Service\MongoProvider;
-use MongoDB\Collection;
-use JMS\Serializer\SerializerBuilder;
-use JMS\Serializer\Serializer;
 
 class VehicleManager
 {
-    private Collection $collection;
-
     public function __construct(
         private RegistrationProvider $registrationProvider,
         private VehicleProvider $vehicleProvider,
-    ) { }
+    ) {
+    }
 
     public function getVehicleByUser(
         User $user,
@@ -39,7 +35,7 @@ class VehicleManager
 
     private function addRegistrationToVehicle(Vehicle $vehicle, User $user)
     {
-        $registrationList = $this->getVehicleRegistrationList($vehicle, $user->isAdmin() ? $user:null);
+        $registrationList = $this->getVehicleRegistrationList($vehicle, $user->isAdmin() ? $user : null);
 
         foreach ($registrationList as $registration) {
             $vehicle->addRegistration($registration);
@@ -86,8 +82,8 @@ class VehicleManager
             'limit' => $perPage,
         ];
 
-        if ($page>1) {
-            $options['skip'] = $perPage * ($page-1);
+        if ($page > 1) {
+            $options['skip'] = $perPage * ($page - 1);
         }
 
         return $options;
